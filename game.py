@@ -1,4 +1,5 @@
 import pygame
+
 pygame.init()
 gray=(119,118,110)
 black=(0,0,0)
@@ -22,9 +23,12 @@ from ultralytics import YOLO
 from server import server
 
 cap=cv2.VideoCapture(0)
-model = YOLO('Weights/best.pt')
+model = YOLO('best.pt')
 className = ['left','right']
-server_c = server()
+
+ip_add = Input("Enter the IP address Where you want to stream")
+
+server_c = server(ip_add)
 
 gamedisplays=pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption("car game")
@@ -81,8 +85,8 @@ def message_display(text):
     textrect.center=((display_width/2),(display_height/2))
     gamedisplays.blit(textsurf,textrect)
     pygame.display.update()
-    cv2.imshow("window",capture_screen())
-    cv2.waitKey(1)
+    server_c.place_frame(capture_screen())
+
     time.sleep(3)
     game_loop()
 
@@ -153,12 +157,12 @@ def game_loop():
 
     bumped=False
     while not bumped:
-        # for event in pygame.event.get():
-        #     if event.type==pygame.QUIT:
-        #         cap.release()
-        #         cv2.destroyAllWindows()
-        #         pygame.quit()
-        #         quit()
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                cap.release()
+                cv2.destroyAllWindows()
+                pygame.quit()
+                quit()
         #     if event.type==pygame.KEYDOWN:
         #         if event.key==pygame.K_LEFT:
         #             x_change=-5
@@ -177,6 +181,7 @@ def game_loop():
         image = cv2.flip(image, 1)
         image, direction = get_predictions(image)    
         cv2.imshow("camera",image)
+        cv2.waitKey(1)
         
         if direction == 'left':
             x_change=-5
@@ -212,8 +217,6 @@ def game_loop():
         y2+=obstacle_speed
 
 
-
-
         obs_starty-=(obstacle_speed/4)
         obstacle(obs_startx,obs_starty,obs)
         obs_starty+=obstacle_speed
@@ -246,7 +249,6 @@ def game_loop():
         pygame.display.update()
         clock.tick(60)
         server_c.place_frame(capture_screen())
-        # cv2.waitKey(1)
 
 
 if __name__ == '__main__':
