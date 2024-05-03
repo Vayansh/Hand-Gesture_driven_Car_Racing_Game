@@ -19,12 +19,12 @@ import os
 import cvzone
 import math
 from ultralytics import YOLO
-
+from server import server
 
 cap=cv2.VideoCapture(0)
 model = YOLO('Weights/best.pt')
 className = ['left','right']
-
+server_c = server()
 
 gamedisplays=pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption("car game")
@@ -245,8 +245,8 @@ def game_loop():
                 crash()
         pygame.display.update()
         clock.tick(60)
-        cv2.imshow("window",capture_screen())
-        cv2.waitKey(1)
+        server_c.place_frame(capture_screen())
+        # cv2.waitKey(1)
 
 
 if __name__ == '__main__':
