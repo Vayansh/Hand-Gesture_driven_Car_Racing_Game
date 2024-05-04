@@ -1,4 +1,22 @@
 import pygame
+import time
+import random
+import cv2
+import numpy as np
+import os
+import cvzone
+import math
+from ultralytics import YOLO
+from server import server
+
+cap=cv2.VideoCapture(0)
+model = YOLO('best.pt')
+className = ['left','right']
+
+ip_add = input("Enter the IP address Where you want to stream")
+
+server_c = server(ip_add)
+
 
 pygame.init()
 gray=(119,118,110)
@@ -11,24 +29,6 @@ bright_green=(0,255,0)
 bright_blue=(0,0,255)
 display_width=800
 display_height=600
-import time
-import random
-import cv2
-import numpy as np
-import os
-# import threading
-import cvzone
-import math
-from ultralytics import YOLO
-from server import server
-
-cap=cv2.VideoCapture(0)
-model = YOLO('best.pt')
-className = ['left','right']
-
-ip_add = Input("Enter the IP address Where you want to stream")
-
-server_c = server(ip_add)
 
 gamedisplays=pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption("car game")
